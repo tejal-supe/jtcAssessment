@@ -1,62 +1,65 @@
-// guests arriving at rthe gate
-// input -> number of guests and the age
-// i.e.either  [23] => index+1 will be the number of the guest or {1:23}
-// <= 2 ==>0
-// >2  && <18 ==>100
-//>=18 && <60 ==> 500
-//>=60 ==> 300
-
-// Your software should issue an entrance ticket and display the total charges on the ticket based on
-// the number of guests and their age.
-
-// this could mean  => if there are 2 guests with age 15 and 20 ==> total =600
-
-//security personal should be able to validate the ticket ==> how?
-//ans - display guests and the age
-// format ==> Guest 1 (age : 15) Guest 2 (age : 20)
-
-// Guests enter
-// take ticket == > conditions
-// issue ticket (dispaly total charges based on number of guests and age)
-
-// Security
-// get ticket data ==> Guest 1 (age : 15) Guest 2 (age : 20)
-
-// function approach 
-function gatePass(age) {
-    const entrancePrice = getTheRateOnAge(age);
-    return { age, entrancePrice };
-}
-function getTheRateOnAge(age){
-    if(age<=2){
-        return 0;
-    }else if(age > 2 && age < 18){
-        return 100;
-    }else if(age >=18 && age<60){
-        return 500;
+// class for taking the age from the ZooTicket and calculating the price as per age
+class Guest {
+    constructor(age) {
+        this.age = age;
+        this.entrancePrice = this.calculateEntrancePrice();
     }
-    else{
-        return 300;
+
+    calculateEntrancePrice() {
+        if (this.age <= 2) {
+            return 0;
+        } else if (this.age < 18) {
+            return 100;
+        } else if (this.age < 60) {
+            return 500;
+        } else {
+            return 300;
+        }
     }
 }
-function totalGuests(data,price){
-    const total = data.length;
-    console.log(`Your entrance ticket is issued for ${total} guests and youe total charges are ${price}`)
 
+//class for taking the age, calculating the total amount and displaying the output
+class ZooTicket {
+    constructor() {
+        this.guests = [];
+    }
+
+    addGuest(age) {
+        const guest = new Guest(age);
+        this.guests.push(guest);
+    }
+
+    calculateTotalPrice() {
+        return this.guests.reduce((total, guest) => total + guest.entrancePrice, 0);
+    }
+
+    displayTicketDetails() {
+      
+        console.log(`Ticket issued for ${this.guests.length} guests and the total amount is ${this.calculateTotalPrice()}`);
+    }
+    securityCheckDetails(){
+        this.guests.forEach((guest, index) => {
+            console.log(`Guest ${index + 1} (age: ${guest.age})`);
+        });
+    }
 }
 
-function securityCheck(data){
-    data.map((d,id)=>{
-        console.log(`Guest ${id + 1} (age : ${d.age})`)
-    } )
-}
+const zooTicket = new ZooTicket();
+zooTicket.addGuest(15);
+zooTicket.addGuest(20);
+zooTicket.displayTicketDetails();
+console.log("At Security Check:");
+zooTicket.securityCheckDetails();
 
-function issueTicket(age){
-        const ticket = age.map(a=>gatePass(a))
-        const totalPrice = ticket.reduce((acc,cuur)=> getTheRateOnAge(cuur) + acc ,0)
-        totalGuests(ticket,totalPrice)
-        securityCheck(ticket)
-        return totalPrice;
-}
+const zooTicket2 = new ZooTicket();
+zooTicket2.addGuest(70);
+zooTicket2.addGuest(50);
+zooTicket2.displayTicketDetails();
+console.log("At Security Check:");
+zooTicket2.securityCheckDetails();
 
-const pass = issueTicket([15,20])
+const zooTicket3 = new ZooTicket();
+zooTicket3.addGuest(70);
+zooTicket3.displayTicketDetails();
+console.log("At Security Check:");
+zooTicket3.securityCheckDetails();
